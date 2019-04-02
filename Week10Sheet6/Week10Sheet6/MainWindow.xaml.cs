@@ -77,7 +77,59 @@ namespace Week10Sheet6
 
         private void btnQueryEx5_Click(object sender, RoutedEventArgs e)
         {
+            Product p = new Product()
+            {
+                ProductName = "Kickapoo Jungle Joy Juice",
+                UnitPrice = 12.49m,
+                CategoryID = 1
+            };
 
+            db.Products.add(p);
+
+            //The method Save Changes doesn't exist.
+            //db.SaveChanges();
+
+            ShowProducts(dgCUstomersEx5);
+        }
+
+        private void ShowProducts(DataGrid currentGrid)
+        {
+            var query = from p in db.Products
+                        where p.Category.CategoryName.Equals("Beverages")
+                        orderby p.ProductID descending
+                        select new
+                        {
+                            p.ProductID,
+                            p.ProductName,
+                            p.Category.CategoryName,
+                            p.UnitPrice
+                        };
+
+            currentGrid.ItemsSource = query.ToList();
+        }
+
+        private void BtnQueryEx6_Click(object sender, RoutedEventArgs e)
+        {
+
+
+
+
+            Product p1 = (db.Products.where(p => p.ProductName.StartsWith("Kick"))
+                            .Select(p => p)).First();
+
+            p1.UnitPrice = 100m;
+
+            //The method SaveChanges doesn't exist.
+            //db.SaveChanges();
+
+            ShowProducts(dgCUstomersEx6);
+        }
+
+        private void BtnQueryEx9_Click(object sender, RoutedEventArgs e)
+        {
+            var query = db.Customers_By_City("London");
+
+            dgCUstomersEx9.ItemsSource = query.ToList();
         }
     }
 }
